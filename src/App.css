@@ -1,0 +1,22 @@
+@keyframes hover {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-hover {
+  animation: hover 2s ease-in-out infinite;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Merienda:wght@400;700&display=swap');
+
+body {
+  font-family: 'Merienda', cursive;
+  margin: 0;
+}
