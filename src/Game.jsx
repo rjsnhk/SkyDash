@@ -23,7 +23,7 @@ const Game = () => {
   useEffect(() => {
     audioRef.current = new Audio('/bg.mp3');
     audioRef.current.loop = true;
-    
+
     const startMusic = () => {
       audioRef.current.play();
       document.removeEventListener('keydown', startMusic);
@@ -46,7 +46,7 @@ const Game = () => {
       setScore(prev => prev + 1);
       setSpeed(prev => prev + SPEED_INCREMENT);
 
-      setWeapons ( prev => {
+      setWeapons(prev => {
         const filtered = prev.filter(weapon => weapon.x > -WEAPON_SIZE);
         const moved = filtered.map(weapon => ({
           ...weapon,
@@ -89,7 +89,7 @@ const Game = () => {
           ) {
             const overlapX = Math.min(carpetBox.right - weaponBox.left, weaponBox.right - carpetBox.left);
             const overlapY = Math.min(carpetBox.bottom - weaponBox.top, weaponBox.bottom - carpetBox.top);
-            
+
             if (overlapX > 10 && overlapY > 10) {
               setGameOver(true);
               if (audioRef.current) {
@@ -110,7 +110,7 @@ const Game = () => {
       }
     };
   }, [gameOver, speed]);
-  
+
   // Movement handling
   const handleKeyDown = useCallback((event) => {
     if (event.key === 'ArrowUp') setIsMovingUp(true);
@@ -121,6 +121,16 @@ const Game = () => {
     if (event.key === 'ArrowUp') setIsMovingUp(false);
     if (event.key === 'ArrowDown') setIsMovingDown(false);
   }, []);
+
+  const handleButtonDown = (direction) => {
+    if (direction === 'up') setIsMovingUp(true);
+    if (direction === 'down') setIsMovingDown(true);
+  };
+
+  const handleButtonUp = () => {
+    setIsMovingUp(false);
+    setIsMovingDown(false);
+  };
 
   useEffect(() => {
     if (gameOver) return;
@@ -147,7 +157,7 @@ const Game = () => {
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
@@ -168,7 +178,7 @@ const Game = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-300 to-yellow-300 p-4">
-      <div 
+      <div
         className="relative w-[1100px] h-[700px] overflow-hidden rounded-lg shadow-2xl border-4 border-blue-500"
         style={{
           backgroundImage: "url('/bg1.jpg')",
@@ -187,30 +197,29 @@ const Game = () => {
             height: `${PLANE_SIZE}px`,
           }}
         >
-          <img 
+          <img
             src="/flying.gif"
             alt="AeroPlane"
             className="w-full h-full object-contain"
           />
         </div>
         {weapons.map((weapon, index) => (
-  <div
-    key={index}
-    className="absolute"
-    style={{
-      transform: `translate(${weapon.x}px, ${weapon.y}px) rotate(${weapon.rotation}deg)`,
-      width: `${WEAPON_SIZE}px`,
-      height: `${WEAPON_SIZE}px`,
-    }}
-  >
-    {/* Replace the stone image with a crow flying towards the carpet */}
-    <img
-      src="/crow.gif"  // Replace with the URL of the crow image
-      alt="Crow"
-      className="w-full h-full"
-    />
-  </div>
-))}
+          <div
+            key={index}
+            className="absolute"
+            style={{
+              transform: `translate(${weapon.x}px, ${weapon.y}px) rotate(${weapon.rotation}deg)`,
+              width: `${WEAPON_SIZE}px`,
+              height: `${WEAPON_SIZE}px`,
+            }}
+          >
+            <img
+              src="/crow.gif"
+              alt="Crow"
+              className="w-full h-full"
+            />
+          </div>
+        ))}
 
         {gameOver && (
           <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center">
@@ -226,8 +235,27 @@ const Game = () => {
             </div>
           </div>
         )}
-        <div className="absolute bottom-4 left-4 text-white bg-blue-500 bg-opacity-75 p-3 rounded-lg">
-          Use ↑ and ↓ arrows to move
+
+        {/* Movement Buttons for Mobile */}
+        <div className="absolute bottom-4 right-4 flex flex-col space-y-4">
+          <button
+            className="w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg text-2xl font-bold"
+            onMouseDown={() => handleButtonDown('up')}
+            onMouseUp={handleButtonUp}
+            onTouchStart={() => handleButtonDown('up')}
+            onTouchEnd={handleButtonUp}
+          >
+            ↑
+          </button>
+          <button
+            className="w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg text-2xl font-bold"
+            onMouseDown={() => handleButtonDown('down')}
+            onMouseUp={handleButtonUp}
+            onTouchStart={() => handleButtonDown('down')}
+            onTouchEnd={handleButtonUp}
+          >
+            ↓
+          </button>
         </div>
       </div>
     </div>
