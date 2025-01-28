@@ -5,12 +5,12 @@ const GAME_WIDTH = 1100;
 const PLANE_SIZE = 100; // Increased for better sprite visibility
 const WEAPON_SIZE = 40;
 const INITIAL_SPEED = 8;
-const SPEED_INCREMENT = 0.001;
+const SPEED_INCREMENT = 0.005;
 const SPAWN_RATE = 0.04;
 
 const Game = () => {
-  const [carpetPosition, setCarpetPosition] = useState({ x: 100, y: GAME_HEIGHT / 2 });
-  const [weapons, setWeapons] = useState([]);
+  const [planePosition, setPlanePosition] = useState({ x: 100, y: GAME_HEIGHT / 2 });
+  const [crows, setCrows] = useState([]);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [speed, setSpeed] = useState(INITIAL_SPEED);
@@ -46,7 +46,7 @@ const Game = () => {
       setScore(prev => prev + 1);
       setSpeed(prev => prev + SPEED_INCREMENT);
 
-      setWeapons(prev => {
+      setCrows(prev => {
         const filtered = prev.filter(weapon => weapon.x > -WEAPON_SIZE);
         const moved = filtered.map(weapon => ({
           ...weapon,
@@ -68,10 +68,10 @@ const Game = () => {
           const BOTTOM_PADDING = 30;
 
           const carpetBox = {
-            left: carpetPosition.x + HORIZONTAL_PADDING,
-            right: carpetPosition.x + PLANE_SIZE - HORIZONTAL_PADDING,
-            top: carpetPosition.y + TOP_PADDING,
-            bottom: carpetPosition.y + PLANE_SIZE - BOTTOM_PADDING
+            left: planePosition.x + HORIZONTAL_PADDING,
+            right: planePosition.x + PLANE_SIZE - HORIZONTAL_PADDING,
+            top: planePosition.y + TOP_PADDING,
+            bottom: planePosition.y + PLANE_SIZE - BOTTOM_PADDING
           };
 
           const weaponBox = {
@@ -136,7 +136,7 @@ const Game = () => {
     if (gameOver) return;
 
     const moveInterval = setInterval(() => {
-      setCarpetPosition(prev => {
+      setPlanePosition(prev => {
         let newY = prev.y;
         const MOVE_SPEED = 10;
 
@@ -165,8 +165,8 @@ const Game = () => {
   }, [handleKeyDown, handleKeyUp]);
 
   const resetGame = () => {
-    setCarpetPosition({ x: 100, y: GAME_HEIGHT / 2 });
-    setWeapons([]);
+    setPlanePosition({ x: 100, y: GAME_HEIGHT / 2 });
+    setCrows([]);
     setGameOver(false);
     setScore(0);
     setSpeed(INITIAL_SPEED);
@@ -181,7 +181,7 @@ const Game = () => {
       <div
         className="relative w-[1100px] h-[700px] overflow-hidden rounded-lg shadow-2xl border-4 border-blue-500"
         style={{
-          backgroundImage: "url('/bg1.jpg')",
+          backgroundImage: "url('/bg11.png')",
           backgroundSize: 'cover',
           backgroundPosition: `${-score}px 0`,
         }}
@@ -192,7 +192,7 @@ const Game = () => {
         <div
           className="absolute"
           style={{
-            transform: `translate(${carpetPosition.x}px, ${carpetPosition.y}px)`,
+            transform: `translate(${planePosition.x}px, ${planePosition.y}px)`,
             width: `${PLANE_SIZE}px`,
             height: `${PLANE_SIZE}px`,
           }}
@@ -203,7 +203,7 @@ const Game = () => {
             className="w-full h-full object-contain"
           />
         </div>
-        {weapons.map((weapon, index) => (
+        {crows.map((weapon, index) => (
           <div
             key={index}
             className="absolute"
