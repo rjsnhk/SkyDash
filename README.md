@@ -39,7 +39,7 @@ To run this project locally, follow these steps:
    npm run dev
    ```
 
-Now open your browser and go to `http://localhost:3000` to start playing! 🎮
+Now open your browser and go to `http://localhost:5173` to start playing! 🎮
 
 ---
 
